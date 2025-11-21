@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Masuk ke Workout Tracker</h3>
+                <span class="close-modal" id="close-login">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="login-options">
+                    <div class="login-card">
+                        <h4><i class="fas fa-user-plus"></i> Profil Baru</h4>
+                        <form id="login-form" class="auth-form">
+                            <div class="form-group">
+                                <label for="username">Nama Pengguna</label>
+                                <input type="text" id="username" placeholder="Masukkan nama pengguna" required>
+                                <span class="error-message" id="username-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="age">Usia</label>
+                                <input type="number" id="age" min="10" max="100" placeholder="Masukkan usia" required>
+                                <span class="error-message" id="age-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="weight">Berat Badan (kg)</label>
+                                <input type="number" id="weight" min="30" max="200" step="0.1" placeholder="Masukkan berat badan" required>
+                                <span class="error-message" id="weight-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="height">Tinggi Badan (cm)</label>
+                                <input type="number" id="height" min="100" max="250" placeholder="Masukkan tinggi badan" required>
+                                <span class="error-message" id="height-error"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="gender">Jenis Kelamin</label>
+                                <select id="gender" required>
+                                    <option value="" disabled selected>Pilih jenis kelamin</option>
+                                    <option value="male">Pria</option>
+                                    <option value="female">Wanita</option>
+                                </select>
+                                <span class="error-message" id="gender-error"></span>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Buat Profil & Mulai
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="guest-card">
+                        <h4><i class="fas fa-user-clock"></i> Mode Tamu</h4>
+                        <p>Gunakan aplikasi tanpa menyimpan profil. Data latihan akan tersimpan sementara di browser Anda.</p>
+                        <div class="guest-features">
+                            <div class="feature-item">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Lacak latihan harian</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-fire"></i>
+                                <span>Estimasi kalori (standar)</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-history"></i>
+                                <span>Riwayat sementara</span>
+                            </div>
+                        </div>
+                        <button id="guest-mode-btn" class="btn-secondary">
+                            <i class="fas fa-play"></i>
+                            Mulai sebagai Tamu
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p class="guest-notice">Anda dapat membuat profil nanti untuk perhitungan kalori yang lebih akurat</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (initially hidden) -->
+    <div id="app-container" class="container hidden">
+        <header class="header">
+            <div class="header-content">
+                <div class="header-top">
+                    <h1 class="logo">
+                        <i class="fas fa-dumbbell"></i>
+                        Workout Tracker
+                    </h1>
+                    <div class="user-info">
+                        <div class="user-avatar" id="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="user-details">
+                            <span id="user-name">Pengguna</span>
+                            <span id="user-mode" class="user-mode guest">Mode Tamu</span>
+                            <div class="user-actions">
+                                <button id="create-profile-btn" class="btn-text">
+                                    <i class="fas fa-user-plus"></i>
+                                    Buat Profil
+                                </button>
+                                <button id="logout-btn" class="btn-text">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Keluar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="tagline">Lacak, Pantau, dan Capai Tujuan Kebugaran Anda</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="dashboard-grid">
+                <!-- Panel Input Form -->
+                <section class="card input-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-plus-circle"></i>
+                        Tambah Latihan Baru
+                    </h2>
+                    <div class="guest-warning" id="guest-warning">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Anda menggunakan mode tamu. <a href="#" id="upgrade-profile-link">Buat profil</a> untuk perhitungan kalori yang lebih akurat.</span>
+                    </div>
+                    <form id="workout-form" class="workout-form">
+                        <div class="form-group">
+                            <label for="exercise-name">Nama Latihan</label>
+                            <input type="text" id="exercise-name" placeholder="Mis: Push Up, Jogging, dll." required>
+                            <span class="error-message" id="name-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exercise-duration">Durasi (menit)</label>
+                            <input type="number" id="exercise-duration" min="1" max="300" placeholder="Mis: 30" required>
+                            <span class="error-message" id="duration-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exercise-type">Jenis Olahraga</label>
+                            <select id="exercise-type" required>
+                                <option value="" disabled selected>Pilih jenis olahraga</option>
+                                <option value="cardio">Cardio</option>
+                                <option value="strength">Strength Training</option>
+                                <option value="flexibility">Fleksibilitas</option>
+                                <option value="sports">Sports</option>
+                                <option value="other">Lainnya</option>
+                            </select>
+                            <span class="error-message" id="type-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="intensity">Intensitas</label>
+                            <select id="intensity" required>
+                                <option value="" disabled selected>Pilih intensitas</option>
+                                <option value="light">Ringan</option>
+                                <option value="moderate">Sedang</option>
+                                <option value="vigorous">Berat</option>
+                            </select>
+                            <span class="error-message" id="intensity-error"></span>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Tambah Latihan
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Panel Ringkasan -->
+                <section class="card summary-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Ringkasan Hari Ini
+                    </h2>
+                    <div class="summary-content">
+                        <div class="summary-item">
+                            <div class="summary-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="summary-info">
+                                <h3>Total Durasi</h3>
+                                <p id="total-duration">0 menit</p>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <div class="summary-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="summary-info">
+                                <h3>Kalori Terbakar</h3>
+                                <p id="total-calories">0 kalori</p>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <div class="summary-icon">
+                                <i class="fas fa-dumbbell"></i>
+                            </div>
+                            <div class="summary-info">
+                                <h3>Total Latihan</h3>
+                                <p id="total-workouts">0 latihan</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <h3>Target Harian: <span id="target-minutes">60</span> menit</h3>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="achievement-badge" id="achievement-badge">
+                        <i class="fas fa-trophy"></i>
+                        <span>Target Harian Tercapai!</span>
+                    </div>
+                </section>
+
+                <!-- Daftar Latihan -->
+                <section class="card workout-list-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-list"></i>
+                            Daftar Latihan
+                        </h2>
+                        <div class="card-actions">
+                            <button id="clear-all" class="btn-secondary">
+                                <i class="fas fa-trash"></i>
+                                Hapus Semua
+                            </button>
+                            <button id="filter-btn" class="btn-secondary">
+                                <i class="fas fa-filter"></i>
+                                Filter
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="workout-list" id="workout-list">
+                        <!-- Daftar latihan akan ditampilkan di sini secara dinamis -->
+                        <div class="empty-state">
+                            <i class="fas fa-running"></i>
+                            <p>Belum ada latihan yang dicatat</p>
+                            <p class="empty-hint">Tambahkan latihan pertama Anda!</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2023 Nur Rizqi Tegar. Dibuat dengan <i class="fas fa-heart"></i> untuk kesehatan Anda.</p>
+        </footer>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Konfirmasi Hapus</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus latihan ini?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-delete" class="btn-secondary">Batal</button>
+                <button id="confirm-delete" class="btn-danger">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div id="filter-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Filter Latihan</h3>
+                <span class="close-modal" id="close-filter">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="filter-options">
+                    <div class="filter-group">
+                        <h4>Jenis Olahraga</h4>
+                        <div class="filter-checkboxes">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="type" value="cardio" checked>
+                                <span class="checkmark"></span>
+                                Cardio
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="type" value="strength" checked>
+                                <span class="checkmark"></span>
+                                Strength Training
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="type" value="flexibility" checked>
+                                <span class="checkmark"></span>
+                                Fleksibilitas
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="type" value="sports" checked>
+                                <span class="checkmark"></span>
+                                Sports
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="type" value="other" checked>
+                                <span class="checkmark"></span>
+                                Lainnya
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Intensitas</h4>
+                        <div class="filter-checkboxes">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="intensity" value="light" checked>
+                                <span class="checkmark"></span>
+                                Ringan
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="intensity" value="moderate" checked>
+                                <span class="checkmark"></span>
+                                Sedang
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="intensity" value="vigorous" checked>
+                                <span class="checkmark"></span>
+                                Berat
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="apply-filter" class="btn-primary">Terapkan Filter</button>
+                <button id="reset-filter" class="btn-secondary">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
