@@ -25,7 +25,7 @@ Workout Tracker juga dilengkapi dengan:
 ## 🎨 Desain Figma
 
 👉 **Figma:**  
-https://www.figma.com/design/wMXPk0lZIpeauddXPwG5pk/ProjectUTS-NurRizqiTegar?node-id=0-1&t=7K1FcKrevuDvGDxA-1
+https://www.figma.com/design/wMXPk0lZIpeauddXPwG5pk/ProjectUTS-NurRizqiTegar?node-id=0-1&t=eUuTUzmSQOfMDbNC-1
 
 ---
 
