@@ -23,7 +23,6 @@ Workout Tracker juga dilengkapi dengan:
 ---
 
 ## 🎨 Desain Figma
-Kamu dapat melihat desain UI melalui link berikut:
 
 👉 **Figma:**  
 https://www.figma.com/design/wMXPk0lZIpeauddXPwG5pk/ProjectUTS-NurRizqiTegar?node-id=0-1&t=7K1FcKrevuDvGDxA-1
