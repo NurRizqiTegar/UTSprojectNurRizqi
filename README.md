@@ -29,3 +29,9 @@ https://www.figma.com/design/wMXPk0lZIpeauddXPwG5pk/ProjectUTS-NurRizqiTegar?nod
 
 ---
 
+## Link Preview Web
+
+https://nurrizqitegar.github.io/UTSprojectNurRizqi/
+
+---
+
